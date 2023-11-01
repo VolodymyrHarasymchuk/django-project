@@ -10,7 +10,9 @@
         <link rel="stylesheet" href="{% static 'main/style.css' %}">
     </head>
     <body>
-        {% block content %}
-        {% endblock content %}
+        <div class="content-container">
+            {% block content %}
+            {% endblock content %}
+        </div>
     </body>
 </html>

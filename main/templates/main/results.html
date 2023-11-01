@@ -8,5 +8,5 @@
     {% endfor %}
     </ul>
 
-    <a href="{% url 'main:detail' question.id %}">Vote again?</a>
+    <div class="form-btn"><a class="btn" href="{% url 'main:detail' question.id %}">Vote again?</a></div>
 {% endblock content %}
