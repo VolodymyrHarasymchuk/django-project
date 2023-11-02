@@ -1,7 +1,10 @@
+import re
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout, authenticate
 from .models import Question, Choice
 
 def index(request):
@@ -38,3 +41,15 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("main:results", args=(question.id,)))
+    
+def sign_up(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return HttpResponseRedirect(reverse("main:index"))
+    else:
+        form = UserCreationForm()
+    
+    return render(request, "registration/sign_up.html", {"form": form})
