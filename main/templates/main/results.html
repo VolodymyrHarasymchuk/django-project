@@ -1,12 +1,16 @@
 {% extends "main/base.html" %}
 {% block content %}
-    <h1>{{ question.question_text }}</h1>
 
-    <ul>
-    {% for choice in question.choice_set.all %}
-        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-    {% endfor %}
-    </ul>
+    <div class="container px-5">
+        <h1>{{ question.question_text }}</h1>
+        <ul>
+            {% for choice in question.choice_set.all %}
+                <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <div class="form-btn"><a class="btn" href="{% url 'main:detail' question.id %}">Vote again</a></div>
+    <div class="container d-grid gap-2 col-3">
+        <a class="btn btn-success" href="{% url 'main:detail' question.id %}">Vote</a>
+    </div>
 {% endblock content %}

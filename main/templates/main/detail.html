@@ -2,17 +2,19 @@
 {% block content %}
     <form action="{% url 'main:vote' question.id %}" method="post">
         {% csrf_token %}
-        <fieldset>
-            <legend><h1>{{ question.question_text }}</h1></legend>
-            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-            {% for choice in question.choice_set.all %}
-                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-            {% endfor %}
-        </fieldset>
-        <div class="form-btn">
-            <input type="submit" value="Vote" class="btn">
-            <a class="btn" href="{% url 'main:results' question.id %}">See Results</a>
+        <div class="container px-5">
+            <fieldset>
+                <legend><h1>{{ question.question_text }}</h1></legend>
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                {% for choice in question.choice_set.all %}
+                    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" class="form-check-input">
+                    <label for="choice{{ forloop.counter }}" class="form-check-label">{{ choice.choice_text }}</label><br>
+                {% endfor %}
+            </fieldset>
+        </div>
+        <div class="container d-grid gap-2 col-3">
+            <input type="submit" value="Vote" class="btn btn-success">
+            <a class="btn btn-success" href="{% url 'main:results' question.id %}">See Results</a>
         </div>
     </form>
 {% endblock content %}
