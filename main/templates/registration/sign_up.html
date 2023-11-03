@@ -1,28 +1,20 @@
 {% extends "main/base.html" %}
 {% block content %}
 
-{% if form.errors %}
-<p>Invalid input</p>
-{% endif %}
+{% load crispy_forms_tags %}
 
 <form method="post" action="{% url 'main:sign_up' %}">
 {% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password1.label_tag }}</td>
-    <td>{{ form.password1 }}</td>
-</tr>
-<tr>
-    <td>{{ form.password2.label_tag }}</td>
-    <td>{{ form.password2 }}</td>
-</tr>
-</table>
 
-<input type="submit" value="Register">
+{{form|crispy}}
+
+<div class="container d-grid gap-2 col-3 mx-auto">
+    <input type="submit" value="Register" class="btn btn-success">
+</div>
 </form>
+
+<div class="container">
+    <p class="my-2 text-center">Already have an account? Login <a href="{% url 'login' %}">Here</a>.</p>
+</div>
 
 {% endblock %}
