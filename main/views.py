@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from .models import Question, Choice
+from .forms import QuestionForm, ChoiceForm
 
 def index(request):
     latest_question_list = Question.objects.filter(pub_date__lte=timezone.now()).exclude(choice__isnull=True).order_by("pub_date")
@@ -52,3 +53,17 @@ def sign_up(request):
         form = UserCreationForm()
     
     return render(request, "registration/sign_up.html", {"form": form})
+
+def create_question(request):
+    if request.method == "POST":
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("main:index"))
+    else:
+        time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+        initial_data = {
+            'pub_date': time,
+        }
+        form = QuestionForm(initial=initial_data)
+    return render(request, "main/create_question.html", {"form": form})
