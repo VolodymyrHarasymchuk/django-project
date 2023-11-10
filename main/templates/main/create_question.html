@@ -7,16 +7,19 @@
 <form action="{% url 'main:create_question' %}" method="post">
 {% csrf_token %}
     <div class="container">
+        {{ choice_formset.management_form }}
         <div class="mb-3">
             <label for="question" class="form-label" aria-describedby="question_error">Question</label>
             <input type="text" name="{{ form_q.question_text.name }}" class="form-control" id="question">
             <div id="question_error" class="form-text">{{ form_q.question_text.errors }}</div>
         </div>
-        <div class="mb-3">
-            <label for="choice" class="form-label" aria-describedby="choice_error">Choice</label>
-            <input type="text" name="{{ form_c.choice_text.name }}" class="form-control" id="choice">
-            <div id="choice_error" class="form-text">{{ form_c.choice_text.errors }}</div>
-        </div>
+        {% for choice_form in choice_formset %}
+            <div class="mb-3">
+                <label for="choice" class="form-label" aria-describedby="choice_error">Choice {{ forloop.counter }}</label>
+                <input type="text" name="{{ choice_form.prefix }}-{{ choice_form.choice_text.name }}" class="form-control" id="choice" {% if forloop.counter == 1 %}required{% endif %}>
+                <div id="choice_error" class="form-text">{{ choice_form.choice_text.errors }}</div>
+            </div>
+        {% endfor %}
         <div class="container d-grid gap-2 col-3 mx-auto">
             <input type="submit" value="Create" class="btn btn-success">
         </div>

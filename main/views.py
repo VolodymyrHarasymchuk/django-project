@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from django.forms import modelformset_factory
 from .models import Question, Choice
 from .forms import QuestionForm, ChoiceForm
 
@@ -57,18 +58,25 @@ def sign_up(request):
 def create_question(request):
     if request.method == "POST":
         form_q = QuestionForm(request.POST)
-        form_c = ChoiceForm(request.POST)
-        if form_q.is_valid() and form_c.is_valid():
+        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=3)
+        choice_formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+
+        if form_q.is_valid() and choice_formset.is_valid():
             question = form_q.save(commit=False)
-            choice = form_c.save(commit=False)
             question.pub_date = timezone.now()
-            choice.question = question
-            choice.votes = 0
             question.save()
-            choice.save()
+            
+            for choice_form in choice_formset:
+                choice = choice_form.save(commit=False)
+                if choice.choice_text == "":
+                    continue
+                choice.question = question
+                choice.votes = 0
+                choice.save()
             
             return HttpResponseRedirect(reverse("main:index"))
     else:
         form_q = QuestionForm()
-        form_c = ChoiceForm()
-    return render(request, "main/create_question.html", {"form_q": form_q, "form_c": form_c})
+        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=3)
+        choice_formset = ChoiceFormSet(queryset=Choice.objects.none())
+    return render(request, "main/create_question.html", {"form_q": form_q, "choice_formset": choice_formset})
