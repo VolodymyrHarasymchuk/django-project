@@ -56,14 +56,19 @@ def sign_up(request):
 
 def create_question(request):
     if request.method == "POST":
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            form.save()
+        form_q = QuestionForm(request.POST)
+        form_c = ChoiceForm(request.POST)
+        if form_q.is_valid() and form_c.is_valid():
+            question = form_q.save(commit=False)
+            choice = form_c.save(commit=False)
+            question.pub_date = timezone.now()
+            choice.question = question
+            choice.votes = 0
+            question.save()
+            choice.save()
+            
             return HttpResponseRedirect(reverse("main:index"))
     else:
-        time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
-        initial_data = {
-            'pub_date': time,
-        }
-        form = QuestionForm(initial=initial_data)
-    return render(request, "main/create_question.html", {"form": form})
+        form_q = QuestionForm()
+        form_c = ChoiceForm()
+    return render(request, "main/create_question.html", {"form_q": form_q, "form_c": form_c})

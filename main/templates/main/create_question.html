@@ -9,10 +9,14 @@
     <div class="container">
         <div class="mb-3">
             <label for="question" class="form-label" aria-describedby="question_error">Question</label>
-            <input type="text" name="{{ form.question_text.name }}" class="form-control" id="question">
-            <div id="question_error" class="form-text">{{ form.question_text.errors }}</div>
+            <input type="text" name="{{ form_q.question_text.name }}" class="form-control" id="question">
+            <div id="question_error" class="form-text">{{ form_q.question_text.errors }}</div>
         </div>
-        <input type="hidden" name="{{ form.pub_date.name }}" value="{{ form.pub_date.value }}">
+        <div class="mb-3">
+            <label for="choice" class="form-label" aria-describedby="choice_error">Choice</label>
+            <input type="text" name="{{ form_c.choice_text.name }}" class="form-control" id="choice">
+            <div id="choice_error" class="form-text">{{ form_c.choice_text.errors }}</div>
+        </div>
         <div class="container d-grid gap-2 col-3 mx-auto">
             <input type="submit" value="Create" class="btn btn-success">
         </div>
