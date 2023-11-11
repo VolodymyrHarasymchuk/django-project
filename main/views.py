@@ -9,6 +9,11 @@ from .models import Question, Choice
 from .forms import QuestionForm, ChoiceForm
 
 def index(request):
+    if request.method == "POST":
+        question = get_object_or_404(Question, pk=request.POST["question"])
+        question.delete()
+        return HttpResponseRedirect(reverse("main:index"))
+
     latest_question_list = Question.objects.filter(pub_date__lte=timezone.now()).exclude(choice__isnull=True).order_by("pub_date")
     context = { "latest_question_list": latest_question_list }
     return render(request, "main/index.html", context)
@@ -58,7 +63,7 @@ def sign_up(request):
 def create_question(request):
     if request.method == "POST":
         form_q = QuestionForm(request.POST)
-        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=3)
+        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=4)
         choice_formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
 
         if form_q.is_valid() and choice_formset.is_valid():
@@ -77,6 +82,6 @@ def create_question(request):
             return HttpResponseRedirect(reverse("main:index"))
     else:
         form_q = QuestionForm()
-        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=3)
+        ChoiceFormSet = modelformset_factory(Choice, fields=['choice_text'], form=ChoiceForm, extra=4)
         choice_formset = ChoiceFormSet(queryset=Choice.objects.none())
     return render(request, "main/create_question.html", {"form_q": form_q, "choice_formset": choice_formset})

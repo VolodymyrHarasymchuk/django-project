@@ -6,8 +6,19 @@
     {% if latest_question_list %}
     <div class="d-grid gap-2">
         {% for question in latest_question_list %}
-            <a href="{% url 'main:results' question.id %}" class="btn btn-outline-dark text-start"
-            style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem; --bs-btn-font-size: 1.5rem;">{{ question.question_text }}</a>
+            <div class="row align-items-center">
+                <div class="col-11">
+                    <a href="{% url 'main:results' question.id %}" class="w-100 btn btn-outline-dark text-start"
+                    style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem; --bs-btn-font-size: 1.5rem;">{{ question.question_text }}</a>
+                </div>
+                <div class="col-1">
+                    <form action="{% url 'main:index' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger" name="question" value="{{question.id}}"
+                        style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem; --bs-btn-font-size: 1.5rem;">Delete</button>
+                    </form>
+                </div>
+            </div>
         {% endfor %}
     </div>
     {% else %}
