@@ -4,11 +4,13 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from .models import Question, Choice
 from .forms import QuestionForm, ChoiceForm
 
 def index(request):
+
     if request.method == "POST":
         question = get_object_or_404(Question, pk=request.POST["question"])
         question.delete()
@@ -18,6 +20,7 @@ def index(request):
     context = { "latest_question_list": latest_question_list }
     return render(request, "main/index.html", context)
 
+@login_required
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, "main/detail.html", {"question": question})
@@ -60,6 +63,7 @@ def sign_up(request):
     
     return render(request, "registration/sign_up.html", {"form": form})
 
+@login_required
 def create_question(request):
     if request.method == "POST":
         form_q = QuestionForm(request.POST)

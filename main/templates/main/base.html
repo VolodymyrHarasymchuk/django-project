@@ -21,9 +21,11 @@
                         <li class="nav-item px-2">
                             <a class="nav-link {% block nav_home %} {% endblock %}" href="{% url 'main:index' %}">Home</a>
                         </li>
-                        <li class="nav-item px-2">
-                            <a class="nav-link {% block nav_question %} {% endblock %}" href="{% url 'main:create_question' %}">Create Question</a>
-                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item px-2">
+                                <a class="nav-link {% block nav_question %} {% endblock %}" href="{% url 'main:create_question' %}">Create Question</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item px-2">
                             <a class="nav-link {% block nav_login %} {% endblock %}" href="{% url 'login' %}">Login</a>
                         </li>

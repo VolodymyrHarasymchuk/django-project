@@ -7,10 +7,11 @@
     <div class="d-grid gap-2">
         {% for question in latest_question_list %}
             <div class="row align-items-center">
-                <div class="col-11">
+                <div class="{% if user.is_authenticated %}col-11 {% else %} col-12 {% endif %}">
                     <a href="{% url 'main:results' question.id %}" class="w-100 btn btn-outline-dark text-start"
                     style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem; --bs-btn-font-size: 1.5rem;">{{ question.question_text }}</a>
                 </div>
+                {% if user.is_authenticated %}
                 <div class="col-1">
                     <form action="{% url 'main:index' %}" method="post">
                         {% csrf_token %}
@@ -18,6 +19,7 @@
                         style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem; --bs-btn-font-size: 1.5rem;">Delete</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
